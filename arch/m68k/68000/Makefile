@@ -16,5 +16,6 @@ obj-$(CONFIG_ROM)	+= romvec.o
 obj-$(CONFIG_DRAGEN2)	+= dragen2.o
 obj-$(CONFIG_UCSIMM)	+= ucsimm.o
 obj-$(CONFIG_UCDIMM)	+= ucsimm.o
+obj-$(CONFIG_68KRAY)	+= 68kray/config_68kray.o 68kray/timers_68kray.o
 
 obj-y			+= head.o

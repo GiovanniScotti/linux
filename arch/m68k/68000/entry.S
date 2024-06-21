@@ -128,8 +128,13 @@ inthandler1:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#1,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#65,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -139,8 +144,13 @@ inthandler2:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#2,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#66,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -150,8 +160,13 @@ inthandler3:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#3,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#67,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -161,8 +176,13 @@ inthandler4:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#4,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#68,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -172,8 +192,13 @@ inthandler5:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#5,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#69,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -183,8 +208,13 @@ inthandler6:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#6,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#70,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -194,8 +224,13 @@ inthandler7:
 	and	#0x3ff, %d0
 
 	movel	%sp,%sp@-
+#if defined(CONFIG_68KRAY)
+	movel	#7,%sp@- 		/*  put vector # on stack*/
+	jsr		do_IRQ			/*  process the IRQ*/
+#else
 	movel	#71,%sp@- 		/*  put vector # on stack*/
 	jbsr	process_int		/*  process the IRQ*/
+#endif
 3:     	addql	#8,%sp			/*  pop parameters off stack*/
 	bra	ret_from_exception
 
@@ -215,6 +250,9 @@ inthandler:
  */
 ENTRY(bad_interrupt)
 	addql	#1,irq_err_count
+#if defined(CONFIG_68KRAY)
+	jbsr	process_bad_exception
+#endif
 	rte
 
 /*

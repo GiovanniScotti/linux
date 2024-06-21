@@ -58,6 +58,8 @@ void __init config_BSP(char *command, int len)
 	init_ucsimm(command, len);
 #elif defined(CONFIG_DRAGEN2)
 	init_dragen2(command, len);
+#elif defined(CONFIG_68KRAY)
+	init_68kray(command, len);
 #endif
 }
 

@@ -171,3 +171,6 @@ sphinx_*/
 
 # Rust analyzer configuration
 /rust-project.json
+
+# 68Kray directory
+/68Kray/

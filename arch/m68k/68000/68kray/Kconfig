@@ -1,0 +1,21 @@
+if 68KRAY
+
+menu "68Kray setup"
+
+config SERIAL_M6850_68KRAY
+	bool "M6850 serial support"
+	depends on 68KRAY
+	select SERIAL_CORE
+	help
+	  This driver supports the M6850 module in the 68Kray M68K board.
+
+config SERIAL_68KRAY_CONSOLE
+	bool "M6850 serial console support"
+	depends on SERIAL_M6850_68KRAY
+	select SERIAL_CORE_CONSOLE
+	help
+	  Enables the M6850 module to be the system serial console.
+
+endmenu
+
+endif # 68KRAY

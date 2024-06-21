@@ -114,6 +114,8 @@ source "arch/m68k/Kconfig.machine"
 
 source "arch/m68k/Kconfig.bus"
 
+source "arch/m68k/68000/68kray/Kconfig"
+
 endmenu
 
 menu "Kernel Features"

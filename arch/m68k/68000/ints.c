@@ -23,6 +23,8 @@
 #include <asm/MC68EZ328.h>
 #elif defined(CONFIG_M68VZ328)
 #include <asm/MC68VZ328.h>
+#elif defined(CONFIG_68KRAY)
+#include <asm/68kray.h>
 #else
 #include <asm/MC68328.h>
 #endif
@@ -70,6 +72,78 @@ asmlinkage irqreturn_t inthandler4(void);
 asmlinkage irqreturn_t inthandler5(void);
 asmlinkage irqreturn_t inthandler6(void);
 asmlinkage irqreturn_t inthandler7(void);
+
+
+#if defined(CONFIG_68KRAY)
+
+asmlinkage void process_int(int vec, struct pt_regs *fp)
+{
+	// Nothing to do
+}
+
+asmlinkage void process_bad_exception(void)
+{
+	pr_emerg("***** UNEXPECTED EXCEPTION - SYSTEM HALTED! *****\n");
+	while(1);
+}
+
+static void intc_irq_enable(struct irq_data *d)
+{
+	// Nothing to do
+}
+
+static void intc_irq_disable(struct irq_data *d)
+{
+	// Nothing to do
+}
+
+static struct irq_chip intc_irq_chip = {
+	.name			= "M68KRAY-INTC",
+	.irq_enable		= intc_irq_enable,
+	.irq_disable	= intc_irq_disable,
+};
+
+/*
+ * This function should be called during kernel startup to initialize
+ * the machine vector table.
+ */
+void __init trap_init(void)
+{
+	int i;
+
+	/* set up the vectors */
+    struct jtable_entry* jtable = (struct jtable_entry*)_ramvec;
+    for (i = 0; i < VECTOR_ENTRIES; i++)
+    {
+        // 0x4EF9 is opcode for jmp long.
+        jtable[i].opcode = 0x4EF9;
+        jtable[i].address = (uint32_t) bad_interrupt;
+    }
+
+    jtable[22].address = (uint32_t) inthandler1; // INT1
+    jtable[21].address = (uint32_t) inthandler2; // INT2
+    jtable[20].address = (uint32_t) inthandler3; // INT3
+    jtable[19].address = (uint32_t) inthandler4; // INT4
+    jtable[18].address = (uint32_t) inthandler5; // INT5
+    jtable[17].address = (uint32_t) inthandler6; // INT6
+    jtable[16].address = (uint32_t) inthandler7; // INT7
+
+    jtable[15].address = (uint32_t) system_call; // TRAP0
+
+    pr_info("%s: traps installed\n", __FUNCTION__);
+}
+
+void __init init_IRQ(void)
+{
+	int i;
+
+	for (i = 0; (i < NR_IRQS); i++) {
+		irq_set_chip(i, &intc_irq_chip);
+		irq_set_handler(i, handle_level_irq);
+	}
+}
+
+#else
 
 /* The 68k family did not have a good way to determine the source
  * of interrupts until later in the family.  The EC000 core does
@@ -187,3 +261,4 @@ void __init init_IRQ(void)
 	}
 }
 
+#endif

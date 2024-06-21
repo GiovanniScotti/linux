@@ -3,6 +3,14 @@ comment "Machine Types"
 
 if M68KCLASSIC
 
+config 68KRAY
+	bool "68Kray support"
+	depends on !MMU
+	help
+	  This option enables support for the 68Kray board. If
+	  you plan to use this kernel on a 68Kray, say Y here and browse the
+	  material available in <file:Documentation/arch/m68k>; otherwise say N.
+
 config AMIGA
 	bool "Amiga support"
 	depends on MMU
